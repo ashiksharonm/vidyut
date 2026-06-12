@@ -19,13 +19,18 @@ import {
   ResponsiveContainer 
 } from 'recharts';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+// Clean up any trailing slashes from the environment variable
+const rawApiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+// Ensure it ends with /api if the user forgot it, and remove trailing slashes
+const API_URL = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
+const FINAL_API_URL = API_URL.endsWith('/api') ? API_URL : `${API_URL}/api`;
 
 function App() {
   const [state, setState] = useState(null);
   const [logs, setLogs] = useState([]);
   const [history, setHistory] = useState([]);
   const [lang, setLang] = useState('en');
+  const [error, setError] = useState(null);
 
   const t = {
     en: {
@@ -60,9 +65,15 @@ function App() {
 
   const fetchData = async () => {
     try {
-      const stateRes = await fetch(`${API_URL}/state`);
+      const stateRes = await fetch(`${FINAL_API_URL}/state`);
+      if (!stateRes.ok) throw new Error(`Backend returned ${stateRes.status}`);
       const stateData = await stateRes.json();
+      
+      // Ensure we received valid data
+      if (stateData.battery_level === undefined) throw new Error('Invalid data format');
+      
       setState(stateData);
+      setError(null);
       
       setHistory(prev => {
         const newHist = [...prev, { 
@@ -73,11 +84,14 @@ function App() {
         return newHist.slice(-20); // Keep last 20 points
       });
 
-      const logsRes = await fetch(`${API_URL}/logs`);
-      const logsData = await logsRes.json();
-      setLogs(logsData.logs);
+      const logsRes = await fetch(`${FINAL_API_URL}/logs`);
+      if (logsRes.ok) {
+        const logsData = await logsRes.json();
+        setLogs(logsData.logs || []);
+      }
     } catch (err) {
       console.error("Failed to fetch data", err);
+      setError(`Cannot connect to backend: ${FINAL_API_URL}`);
     }
   };
 
@@ -117,6 +131,12 @@ function App() {
           {lang === 'en' ? 'हिन्दी (Hindi)' : 'English'}
         </button>
       </header>
+
+      {error && (
+        <div className="bg-red-500/20 border border-red-500 text-red-100 p-4 rounded-xl mb-6">
+          <strong>Connection Error:</strong> {error}
+        </div>
+      )}
 
       <div className="controls-panel" style={{ marginBottom: '1.5rem' }}>
         <button className="btn" onClick={() => overrideWeather(0.2)}>
