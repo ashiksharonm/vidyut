@@ -46,21 +46,106 @@ function App() {
       simulateCloud: 'Simulate Heavy Clouds',
       simulateClear: 'Simulate Clear Sky',
       simulateDrain: 'Simulate Battery Drain',
+      waiting: 'Waiting for AI agent actions...',
+      langName: 'English'
     },
     hi: {
-      title: 'विद्युत माइक्रोग्रिड मैनेजर (Vidyut Microgrid)',
-      gridStatus: 'ग्रिड स्थिति (Grid Status)',
-      battery: 'बैटरी स्तर (Battery)',
-      solar: 'सौर ऊर्जा (Solar)',
-      essential: 'आवश्यक भार (Essential)',
-      nonEssential: 'गैर-आवश्यक भार (Non-Essential)',
-      connected: 'जुड़ा हुआ (Connected)',
-      disconnected: 'काट दिया गया (Disconnected)',
-      aiLog: 'एआई निर्णय लॉग (AI Log)',
+      title: 'विद्युत माइक्रोग्रिड मैनेजर',
+      gridStatus: 'ग्रिड स्थिति',
+      battery: 'बैटरी स्तर',
+      solar: 'सौर ऊर्जा',
+      essential: 'आवश्यक भार',
+      nonEssential: 'गैर-आवश्यक भार',
+      connected: 'जुड़ा हुआ',
+      disconnected: 'काट दिया गया',
+      aiLog: 'एआई निर्णय लॉग',
       simulateCloud: 'बादलों का अनुकरण करें',
       simulateClear: 'साफ आसमान का अनुकरण करें',
       simulateDrain: 'बैटरी कम करें',
+      waiting: 'एआई एजेंट की प्रतीक्षा कर रहा है...',
+      langName: 'हिन्दी'
+    },
+    ta: {
+      title: 'வித்யுத் மைக்ரோகிரிட் மேலாளர்',
+      gridStatus: 'கிரிட் நிலை',
+      battery: 'பேட்டரி நிலை',
+      solar: 'சூரிய சக்தி',
+      essential: 'அத்தியாவசிய சுமை',
+      nonEssential: 'அத்தியாவசியமற்ற சுமை',
+      connected: 'இணைக்கப்பட்டுள்ளது',
+      disconnected: 'துண்டிக்கப்பட்டது',
+      aiLog: 'AI முடிவு பதிவு',
+      simulateCloud: 'மேகங்களை உருவகப்படுத்து',
+      simulateClear: 'தெளிவான வானத்தை உருவகப்படுத்து',
+      simulateDrain: 'பேட்டரியை குறை',
+      waiting: 'AI முகவர் செயல்களுக்காக காத்திருக்கிறது...',
+      langName: 'தமிழ்'
+    },
+    te: {
+      title: 'విద్యుత్ మైక్రోగ్రిడ్ మేనేజర్',
+      gridStatus: 'గ్రిడ్ స్థితి',
+      battery: 'బ్యాటరీ స్థాయి',
+      solar: 'సౌర శక్తి',
+      essential: 'అవసరమైన లోడ్',
+      nonEssential: 'అనవసరమైన లోడ్',
+      connected: 'కనెక్ట్ చేయబడింది',
+      disconnected: 'డిస్‌కనెక్ట్ చేయబడింది',
+      aiLog: 'AI నిర్ణయ లాగ్',
+      simulateCloud: 'మేఘాలను అనుకరించండి',
+      simulateClear: 'స్పష్టమైన ఆకాశాన్ని అనుకరించండి',
+      simulateDrain: 'బ్యాటరీని తగ్గించండి',
+      waiting: 'AI ఏజెంట్ చర్యల కోసం వేచి ఉంది...',
+      langName: 'తెలుగు'
+    },
+    bn: {
+      title: 'বিদ্যুৎ মাইক্রোগ্রিড ম্যানেজার',
+      gridStatus: 'গ্রিড স্থিতি',
+      battery: 'ব্যাটারি স্তর',
+      solar: 'সৌর শক্তি',
+      essential: 'প্রয়োজনীয় লোড',
+      nonEssential: 'অপ্রয়োজনীয় লোড',
+      connected: 'সংযুক্ত',
+      disconnected: 'বিচ্ছিন্ন',
+      aiLog: 'এআই সিদ্ধান্ত লগ',
+      simulateCloud: 'মেঘ অনুকরণ করুন',
+      simulateClear: 'পরিষ্কার আকাশ অনুকরণ করুন',
+      simulateDrain: 'ব্যাটারি কমান',
+      waiting: 'এআই এজেন্টের জন্য অপেক্ষা করছে...',
+      langName: 'বাংলা'
     }
+  };
+
+  const translateLog = (msg, lang) => {
+    if (lang === 'en') return msg;
+
+    const p1 = /Battery critical \((.*?)%\)\. Solar generation \((.*?)kW\) is insufficient for current demand \((.*?)kW\)\. Shedding non-essential agricultural load to protect essential services\./;
+    const m1 = msg.match(p1);
+    if (m1) {
+      if (lang === 'hi') return `बैटरी गंभीर (${m1[1]}%)। वर्तमान मांग (${m1[3]}kW) के लिए सौर ऊर्जा (${m1[2]}kW) अपर्याप्त है। आवश्यक सेवाओं की सुरक्षा के लिए कृषि भार को काट दिया गया है।`;
+      if (lang === 'ta') return `பேட்டரி ஆபத்தானது (${m1[1]}%). தற்போதைய தேவைக்கு (${m1[3]}kW) சூரிய உற்பத்தி (${m1[2]}kW) போதாது. அத்தியாவசிய சேவைகளைப் பாதுகாக்க விவசாயச் சுமை குறைக்கப்பட்டது.`;
+      if (lang === 'te') return `బ్యాటరీ ప్రమాదకరం (${m1[1]}%). ప్రస్తుత డిమాండ్‌కు (${m1[3]}kW) సౌర ఉత్పత్తి (${m1[2]}kW) సరిపోదు. ముఖ్యమైన సేవలను రక్షించడానికి వ్యవసాయ లోడ్ కత్తిరించబడింది.`;
+      if (lang === 'bn') return `ব্যাটারি আশঙ্কাজনক (${m1[1]}%)। বর্তমান চাহিদার (${m1[3]}kW) জন্য সৌর উৎপাদন (${m1[2]}kW) অপর্যাপ্ত। প্রয়োজনীয় পরিষেবা রক্ষার্থে কৃষি লোড কমানো হয়েছে।`;
+    }
+
+    const p2 = /Weather Prediction Alert: Heavy cloud cover detected\. Battery at (.*?)%\. Proactively shedding non-essential loads to conserve power for the night\./;
+    const m2 = msg.match(p2);
+    if (m2) {
+      if (lang === 'hi') return `मौसम भविष्यवाणी अलर्ट: घने बादलों का अनुमान। बैटरी ${m2[1]}% पर। रात के लिए बिजली बचाने के लिए गैर-आवश्यक भार को सक्रिय रूप से काट दिया गया है।`;
+      if (lang === 'ta') return `வானிலை எச்சரிக்கை: மேகமூட்டம் கண்டறியப்பட்டது. பேட்டரி ${m2[1]}%. இரவுக்கு மின்சாரத்தை சேமிக்க அத்தியாவசியமற்ற சுமைகள் முன்கூட்டியே குறைக்கப்பட்டன.`;
+      if (lang === 'te') return `వాతావరణ హెచ్చరిక: మేఘావృతం ఉన్నట్లు గుర్తించబడింది. బ్యాటరీ ${m2[1]}%. రాత్రికి విద్యుత్‌ను ఆదా చేయడానికి అనవసరమైన లోడ్‌లు తొలగించబడ్డాయి.`;
+      if (lang === 'bn') return `আবহাওয়ার পূর্বাভাস: ঘন মেঘ শনাক্ত হয়েছে। ব্যাটারি ${m2[1]}%। রাতের জন্য বিদ্যুৎ বাঁচাতে অপ্রয়োজনীয় লোড আগে থেকেই কমানো হয়েছে।`;
+    }
+
+    const p3 = /Grid stabilized\. Battery healthy \((.*?)%\)\. Solar generation is optimal\. Reconnecting non-essential agricultural pumps\./;
+    const m3 = msg.match(p3);
+    if (m3) {
+      if (lang === 'hi') return `ग्रिड स्थिर हो गया। बैटरी स्वस्थ है (${m3[1]}%)। सौर उत्पादन इष्टतम है। कृषि पंपों को फिर से जोड़ा जा रहा है।`;
+      if (lang === 'ta') return `கிரிட் சீரானது. பேட்டரி சீராக உள்ளது (${m3[1]}%). சூரிய உற்பத்தி உகந்தது. விவசாய பம்புகள் மீண்டும் இணைக்கப்படுகின்றன.`;
+      if (lang === 'te') return `గ్రిడ్ స్థిరీకరించబడింది. బ్యాటరీ ఆరోగ్యంగా ఉంది (${m3[1]}%). సౌర ఉత్పత్తి ఆశాజనకంగా ఉంది. వ్యవసాయ పంపులు మళ్లీ కనెక్ట్ చేయబడుతున్నాయి.`;
+      if (lang === 'bn') return `গ্রিড স্থিতিশীল। ব্যাটারি ভালো আছে (${m3[1]}%)। সৌর উৎপাদন অনুকূল। কৃষি পাম্প পুনরায় সংযুক্ত করা হচ্ছে।`;
+    }
+
+    return msg; // Fallback
   };
 
   const fetchData = async () => {
@@ -124,12 +209,17 @@ function App() {
           <Zap size={28} color="var(--accent-blue)" />
           {text.title}
         </div>
-        <button 
-          className="language-toggle" 
-          onClick={() => setLang(lang === 'en' ? 'hi' : 'en')}
+        <select 
+          className="language-toggle bg-gray-800 text-white p-2 rounded border border-gray-600" 
+          value={lang}
+          onChange={(e) => setLang(e.target.value)}
         >
-          {lang === 'en' ? 'हिन्दी (Hindi)' : 'English'}
-        </button>
+          <option value="en">English</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+          <option value="bn">বাংলা (Bengali)</option>
+        </select>
       </header>
 
       {error && (
@@ -236,13 +326,13 @@ function App() {
           <div className="logs-container">
             {logs.length === 0 ? (
               <div style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '2rem' }}>
-                Waiting for AI agent actions...
+                {text.waiting}
               </div>
             ) : (
               logs.map((log, index) => (
                 <div key={index} className={`log-entry ${log.type}`}>
                   <div className="log-time">{new Date(log.timestamp * 1000).toLocaleTimeString()}</div>
-                  <div className="log-message">{log.message}</div>
+                  <div className="log-message">{translateLog(log.message, lang)}</div>
                 </div>
               ))
             )}
