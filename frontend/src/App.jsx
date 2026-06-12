@@ -102,7 +102,7 @@ function App() {
   }, []);
 
   const overrideWeather = async (modifier) => {
-    await fetch(`${API_URL}/override/weather`, {
+    await fetch(`${FINAL_API_URL}/override/weather`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ cloud_cover: modifier })
@@ -110,7 +110,7 @@ function App() {
   };
 
   const overrideBattery = async (level) => {
-    await fetch(`${API_URL}/override/battery?level=${level}`, { method: 'POST' });
+    await fetch(`${FINAL_API_URL}/override/battery?level=${level}`, { method: 'POST' });
   };
 
   if (!state) return <div className="dashboard-container">Loading...</div>;
